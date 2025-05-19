@@ -1,4 +1,4 @@
-## Cíl
+## 📚 Cíl
 Vytvořte konzolovou aplikaci pro správu knihovny, která umožní:
 
 1. Přidávat knihy do knihovny.
@@ -8,7 +8,7 @@ Vytvořte konzolovou aplikaci pro správu knihovny, která umožní:
    
 ---  
 
-## Zadání
+##  📝 Zadání
 ### Třída Book
 Vytvořte třídu ``Book``, která bude mít následující vlastnosti:
 
