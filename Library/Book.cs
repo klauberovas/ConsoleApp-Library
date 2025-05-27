@@ -22,7 +22,6 @@ namespace Library
                 }
                 pages = value;
             }
-
         }
         public Book(string title, string author, DateTime publishedDate, int pages)
         {
