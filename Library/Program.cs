@@ -5,19 +5,19 @@ class Program
     static void Main(string[] args)
     {
         var library = new List<Book>() {
-            new("1984", "George Orwell", new DateTime(1949,06,08), 328),
-            new("Animal Farm", "George Orwell", new DateTime(1945, 08, 17), 112),
-            new("Brave New World", "Aldous Huxley",new DateTime(1932, 01,01),311),
-            new("Fahrenheit 451", "Ray Bradbury", new DateTime(1953, 10, 19), 194),
-            new("The Great Gatsby", "F. Scott Fitzgerald", new DateTime(1925, 4, 10), 180),
-            new("To Kill a Mockingbird", "Harper Lee", new DateTime(1960, 7, 11), 281)
+            new("ADD;1984;George Orwell;1949-06-08;328"),
+            new("ADD;Animal Farm;George Orwell;1945-08-17;112"),
+            new("ADD;Brave New World;Aldous Huxley;1932-01-01;311"),
+            new("ADD;Fahrenheit 451;Ray Bradbury;1953-10-19;194"),
+            new("ADD;The Great Gatsby;F. Scott Fitzgerald;1925-04-10;180"),
+            new("ADD;To Kill a Mockingbird;Harper Lee;1960-07-11;281")
         };
 
         while (true)
         {
             Console.WriteLine("============== LIBRARY MENU ===============");
             Console.WriteLine("Enter a command:");
-            Console.WriteLine("  ADD;[title],[author];[published date in format YYYY-MM-DD];[pages]");
+            Console.WriteLine("  ADD;[title];[author];[published date in format YYYY-MM-DD];[pages]");
             Console.WriteLine("  LIST        - show all books sorted by date");
             Console.WriteLine("  STATS       - show average pages, books per author, unique title words");
             Console.WriteLine("  FIND;[word] - search books by title");
@@ -28,7 +28,17 @@ class Program
 
             if (input.ToUpper().StartsWith("ADD;"))
             {
+                try
+                {
+                    Book book = new Book(input);
+                    library.Add(book);
+                    Console.WriteLine("Book added.");
+                }
+                catch (ArgumentException e)
+                {
 
+                    Console.WriteLine($"Error: {e.Message}"); ;
+                }
             }
             else if (input.ToUpper().StartsWith("FIND;"))
             {
@@ -55,7 +65,6 @@ class Program
             }
         }
     }
-
     private static void ShowBooks(List<Book> library)
     {
         foreach (var b in library.OrderBy(b => b.PublishedDate))
