@@ -42,7 +42,16 @@ class Program
             }
             else if (input.ToUpper().StartsWith("FIND;"))
             {
+                string[] parts = input.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
+                if (parts.Length < 2)
+                {
+                    Console.WriteLine("Missing search keyword.");
+                    continue;
+                }
+
+                string keyword = parts[1];
+                ShowBooksByTitle(library, keyword);
             }
             else
             {
@@ -65,6 +74,25 @@ class Program
             }
         }
     }
+
+    private static void ShowBooksByTitle(List<Book> library,string keyword)
+    {
+        var results = library.Where(b => b.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase));
+
+        if (!results.Any())
+        {
+            Console.WriteLine($"Nothing was found for '{keyword}'.");
+        }
+        else
+        {
+            Console.WriteLine($"Search result for: '{keyword}':");
+            foreach (var book in results)
+            {
+                Console.WriteLine($"Book: {book.Title} from {book.Author}.");
+            }
+        }
+    }
+
     private static void ShowBooks(List<Book> library)
     {
         foreach (var b in library.OrderBy(b => b.PublishedDate))
