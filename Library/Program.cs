@@ -62,6 +62,7 @@ class Program
                         break;
 
                     case "STATS":
+                        ShowBookStats(library);
                         break;
 
                     case "END":
@@ -75,7 +76,7 @@ class Program
         }
     }
 
-    private static void ShowBooksByTitle(List<Book> library,string keyword)
+    private static void ShowBooksByTitle(List<Book> library, string keyword)
     {
         var results = library.Where(b => b.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase));
 
@@ -99,5 +100,31 @@ class Program
         {
             Console.WriteLine($"Book: {b.Title}, author: {b.Author}, published: {b.PublishedDate:yyyy.MM.dd}, pages: {b.Pages}");
         }
+    }
+
+    private static void ShowBookStats(List<Book> library)
+    {
+        var averagePages = (int)Math.Round(library.Select(b => b.Pages).Average());
+
+        Console.WriteLine("Statistics:");
+
+        Console.WriteLine($"Average number of pages: {averagePages}");
+
+        Console.WriteLine("Books per author:");
+        foreach (var group in library.GroupBy(b => b.Author))
+        {
+            Console.WriteLine($"- {group.Key}: {group.Count()}");
+        }
+
+        var uniqueTitleWords = library.SelectMany(b => b.Title
+        .Replace(",", "")
+        .Replace(".", "")
+        .Replace(":", "")
+        .Split(" ", StringSplitOptions.RemoveEmptyEntries))
+        .Select(w => w.ToLower())
+        .Distinct()
+        .ToList();
+
+        Console.WriteLine($"Number of unique words in book titles: {uniqueTitleWords.Count()}");
     }
 }
