@@ -4,13 +4,13 @@ class Program
 {
     static void Main(string[] args)
     {
-        var library = new List<Book>() {
-            new("ADD;1984;George Orwell;1949-06-08;328"),
-            new("ADD;Animal Farm;George Orwell;1945-08-17;112"),
-            new("ADD;Brave New World;Aldous Huxley;1932-01-01;311"),
-            new("ADD;Fahrenheit 451;Ray Bradbury;1953-10-19;194"),
-            new("ADD;The Great Gatsby;F. Scott Fitzgerald;1925-04-10;180"),
-            new("ADD;To Kill a Mockingbird;Harper Lee;1960-07-11;281")
+        var bookList = new List<Book>() {
+            new("1984", "George Orwell", new DateTime(1949, 6, 8), 328),
+            new("Animal Farm", "George Orwell", new DateTime(1945, 8, 17), 112),
+            new("Brave New World", "Aldous Huxley", new DateTime(1932, 1, 1), 311),
+            new("Fahrenheit 451", "Ray Bradbury", new DateTime(1953, 10, 19), 194),
+            new("The Great Gatsby", "F. Scott Fitzgerald", new DateTime(1925, 4, 10), 180),
+            new("To Kill a Mockingbird", "Harper Lee", new DateTime(1960, 7, 11), 281)
         };
 
         while (true)
@@ -30,9 +30,19 @@ class Program
             {
                 try
                 {
-                    Book book = new Book(input);
-                    library.Add(book);
-                    Console.WriteLine("Book added.");
+                    Book book = Book.FromInput(input);
+
+                    if (bookList.Any(b => b.Title.Equals(book.Title, StringComparison.OrdinalIgnoreCase)
+                        && b.Author.Equals(book.Author, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        Console.WriteLine("This book is already in the library.");
+                    }
+                    else
+                    {
+                        bookList.Add(book);
+                        Console.WriteLine("Book added.");
+                    }
+
                 }
                 catch (ArgumentException e)
                 {
@@ -40,6 +50,7 @@ class Program
                     Console.WriteLine($"Error: {e.Message}"); ;
                 }
             }
+
             else if (input.ToUpper().StartsWith("FIND;"))
             {
                 string[] parts = input.Split(";", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -51,18 +62,20 @@ class Program
                 }
 
                 string keyword = parts[1];
-                ShowBooksByTitle(library, keyword);
+                SearchBooksByTitle(bookList, keyword);
             }
+
             else
             {
+
                 switch (input.ToUpper())
                 {
                     case "LIST":
-                        ShowBooks(library);
+                        DisplayBooksSortedByDate(bookList);
                         break;
 
                     case "STATS":
-                        ShowBookStats(library);
+                        DisplayLibraryStatistics(bookList);
                         break;
 
                     case "END":
@@ -76,7 +89,7 @@ class Program
         }
     }
 
-    private static void ShowBooksByTitle(List<Book> library, string keyword)
+    private static void SearchBooksByTitle(List<Book> library, string keyword)
     {
         var results = library.Where(b => b.Title.Contains(keyword, StringComparison.OrdinalIgnoreCase));
 
@@ -94,7 +107,7 @@ class Program
         }
     }
 
-    private static void ShowBooks(List<Book> library)
+    private static void DisplayBooksSortedByDate(List<Book> library)
     {
         foreach (var b in library.OrderBy(b => b.PublishedDate))
         {
@@ -102,7 +115,7 @@ class Program
         }
     }
 
-    private static void ShowBookStats(List<Book> library)
+    private static void DisplayLibraryStatistics(List<Book> library)
     {
         var averagePages = (int)Math.Round(library.Select(b => b.Pages).Average());
 

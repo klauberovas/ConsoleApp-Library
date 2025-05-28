@@ -20,7 +20,14 @@ namespace Library
                 pages = value;
             }
         }
-        public Book(string input)
+        public Book(string title, string author, DateTime publishedDate, int pages)
+        {
+            Title = title;
+            Author = author;
+            PublishedDate = publishedDate;
+            Pages = pages;
+        }
+        public static Book FromInput(string input)
         {
             string[] parts = input.Split(";", StringSplitOptions.TrimEntries);
 
@@ -29,22 +36,20 @@ namespace Library
                 throw new ArgumentException("Invalid format. Expected: ADD;[title];[author];[YYYY-MM-DD];[pages]");
             }
 
-            Title = parts[1];
-            Author = parts[2];
+            string title = parts[1];
+            string author = parts[2];
 
             if (!DateTime.TryParseExact(parts[3], "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime parsedDate))
             {
                 throw new ArgumentException("Invalid date format. Please use YYYY-MM-DD.");
             }
 
-            PublishedDate = parsedDate;
-
             if (!int.TryParse(parts[4], out int parsedPages))
             {
                 throw new ArgumentException("Invalid number of pages.");
             }
 
-            Pages = parsedPages;
+            return new Book(title, author, parsedDate, parsedPages);
         }
     }
 }
